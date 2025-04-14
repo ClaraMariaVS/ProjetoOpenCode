@@ -4,26 +4,17 @@ package entites;
 // Representa uma relação onde uma publicação pode ou não conter uma mídia
 public class midiaPost{
 
-    // Referência para a publicação (superclasse)
     private publicacoes publicacao;
-
-    // Referência para a mídia associada
     private midias midia;
-
-    // Indica se há ou não uma mídia vinculada à publicação
     private boolean possuiMidia;
 
-    // Construtor padrão
     public midiaPost() {}
 
-    // Construtor com parâmetros
-    public midiaPost(publicacoes publicacao, midias midia, boolean possuiMidia) {
+    public midiaPost(publicacoes publicacao, midias midia, boolean possuiMidia) throws MidiaInvalidaException {
         this.publicacao = publicacao;
-        this.midia = midia;
+        setMidia(midia); // valida dentro do setter
         this.possuiMidia = possuiMidia;
     }
-
-    // Getters e setters
 
     public publicacoes getPublicacao() {
         return publicacao;
@@ -37,7 +28,10 @@ public class midiaPost{
         return midia;
     }
 
-    public void setMidia(midias midia) {
+    public void setMidia(midias midia) throws MidiaInvalidaException {
+        if (midia == null || midia.getFormato() == null || midia.getFormato().isBlank()) {
+            throw new MidiaInvalidaException("Mídia inválida ou não suportada.");
+        }
         this.midia = midia;
     }
 
@@ -49,31 +43,45 @@ public class midiaPost{
         this.possuiMidia = possuiMidia;
     }
 
-    // Método para exibir os dados da publicação e, se existir, da mídia associada
+    // Método principal com tratamento de erro
     public void exibirMidiaPost() {
-        System.out.println("=== PUBLICAÇÃO ===");
-        publicacao.exibicaoPublicacoes();
+        try {
+            System.out.println("=== PUBLICAÇÃO ===");
+            publicacao.exibicaoPublicacoes();
 
-        if (possuiMidia && midia != null) {
-            System.out.println("=== MÍDIA ASSOCIADA ===");
-            midia.exibicaoMidias();
-        } else {
-            System.out.println("Nenhuma mídia associada.");
+            if (possuiMidia && midia != null) {
+                System.out.println("=== MÍDIA ASSOCIADA ===");
+                midia.exibicaoMidias();
+            } else {
+                throw new MidiaInvalidaException("Nenhuma mídia associada ou inválida.");
+            }
+        } catch (MidiaInvalidaException e) {
+            System.err.println("Erro ao exibir mídia: " + e.getMessage());
+        } finally {
+            System.out.println("Exibição finalizada.\n");
         }
     }
 
-    // Sobrecarga: opção de exibir ou não os dados da mídia, mesmo que esteja associada
+    // Versão sobrecarregada com controle de exibição
     public void exibirMidiaPost(boolean mostrarMidia) {
-        System.out.println("=== PUBLICAÇÃO ===");
-        publicacao.exibicaoPublicacoes();
+        try {
+            System.out.println("=== PUBLICAÇÃO ===");
+            publicacao.exibicaoPublicacoes();
 
-        if (mostrarMidia && possuiMidia && midia != null) {
-            System.out.println("=== MÍDIA ASSOCIADA ===");
-            midia.exibicaoMidias();
-        } else {
-            System.out.println("Mídia: [oculta ou inexistente]");
+            if (mostrarMidia && possuiMidia && midia != null) {
+                System.out.println("=== MÍDIA ASSOCIADA ===");
+                midia.exibicaoMidias();
+            } else {
+                throw new MidiaInvalidaException("Mídia: [oculta ou inexistente]");
+            }
+
+        } catch (MidiaInvalidaException e) {
+            System.err.println("Aviso: " + e.getMessage());
+        } finally {
+            System.out.println("Exibição finalizada.\n");
         }
     }
+
 }
 
 

@@ -1,30 +1,40 @@
 package entites;
 
-// Classe 'avaliacao' herda de 'publicacoes'
-public class avaliacao extends publicacoes implements Exibivel{
+public class avaliacao extends publicacoes implements Exibivel {
 
-// Atributos específicos da classe avaliacao
-        private int data;
-        private int nota;
+    private int data;
+    private int nota;
 
-// Construtor sem parâmetros
-    public avaliacao (){
-        super(); // Chama o construtor da super
+    // Construtor sem parâmetros
+    public avaliacao() {
+        super();
     }
-    
- // Construtor com parâmetros (inclui os da superclasse e os próprios)
-    public avaliacao (String titulo, String descricao, String dataUpload, int data, int nota){
-        super(titulo, descricao, dataUpload); //  Inicializa os atributos herdados
+
+    // Construtor com parâmetros
+    public avaliacao(String titulo, String descricao, String dataUpload, int data, int nota) throws DataInvalidaException {
+        super(titulo, descricao, dataUpload);
+
+        if (data <= 0 || String.valueOf(data).length() != 8) {
+            throw new DataInvalidaException("A data deve ter 8 dígitos no formato YYYYMMDD.");
+        }
+
+        if (nota < 0 || nota > 10) {
+            throw new IllegalArgumentException("A nota deve estar entre 0 e 10.");
+        }
+
         this.data = data;
         this.nota = nota;
     }
 
-// Getters e Setters 
+    // Getters e Setters com validações
     public int getData() {
         return data;
     }
 
-    public void setData(int data) {
+    public void setData(int data) throws DataInvalidaException {
+        if (data <= 0 || String.valueOf(data).length() != 8) {
+            throw new DataInvalidaException("Data inválida. Use o formato DDMMYYYY.");
+        }
         this.data = data;
     }
 
@@ -33,30 +43,31 @@ public class avaliacao extends publicacoes implements Exibivel{
     }
 
     public void setNota(int nota) {
+        if (nota < 0 || nota > 10) {
+            throw new IllegalArgumentException("Nota inválida. Deve ser entre 0 e 10.");
+        }
         this.nota = nota;
     }
 
-// Sobrescrita de método: redefinimos o comportamento do método da superclasse
-        @Override
-	 public void exibicaoAvaliacao (){
-            super.exibicaoPublicacoes(); //Exibe as informações comuns da publicação
-             System.out.println("Data: " + data);
-             System.out.println("Nota: " + nota);
-        }
+    @Override
+    public void exibicaoAvaliacao() {
+        super.exibicaoPublicacoes();
+        System.out.println("Data: " + data);
+        System.out.println("Nota: " + nota);
+    }
 
-// Sobrecarga de método: Permite controlar se a nota será exibida ou não
-        public void exibicaoAvaliacao(boolean mostrarNota) {
-            super.exibicaoPublicacoes(); // Exibe título, descrição e data do upload (Herdado da super)
-            System.out.println("Data: " + data);
-            if (mostrarNota) {
-                System.out.println("Nota: " + nota);
-            } else {
-                System.out.println("Nota: [oculta]");
-            }
+    public void exibicaoAvaliacao(boolean mostrarNota) {
+        super.exibicaoPublicacoes();
+        System.out.println("Data: " + data);
+        if (mostrarNota) {
+            System.out.println("Nota: " + nota);
+        } else {
+            System.out.println("Nota: [oculta]");
         }
+    }
 
-            @Override
-            public void exibir() {
-                exibicaoAvaliacao();
-            }
+    @Override
+    public void exibir() {
+        exibicaoAvaliacao();
+    }
 }

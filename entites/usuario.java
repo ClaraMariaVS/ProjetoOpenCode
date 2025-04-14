@@ -1,30 +1,36 @@
 package entites;
 
 // Classe 'usuario' herda da superclasse 'publicacoes'
-public class usuario extends publicacoes implements Exibivel{
-       
-// Atributos específicos da classe 'usuario'
-       private String nome;
-       private String nivel; 
+public class usuario extends publicacoes implements Exibivel {
+    
+    private String nome;
+    private String nivel;
 
-// Construtor padrão (sem parâmetros )
-    public usuario (){
-        super(); // Chama o construtor da superclasse
+    // Construtor padrão
+    public usuario() {
+        super();
     }
-    
-// Construtor com parâmetros (inclui atributos herdados e próprios)
-    public usuario (String titulo, String descricao, String dataUpload, String nome, String nivel){
-        super(titulo, descricao, dataUpload);  // Inicializa os atributos da superclasse
-        this.nome = nome;
-        this.nivel = nivel;
+
+    // Construtor com validação
+    public usuario(String titulo, String descricao, String dataUpload, String nome, String nivel) {
+        super(titulo, descricao, dataUpload);
+        try {
+            setNome(nome);
+            setNivel(nivel);
+        } catch (UsuarioInvalidoException e) {
+            System.err.println("Erro ao criar usuário: " + e.getMessage());
+        }
     }
-    
-// Getters e Setters
+
+    // Getters e Setters com validação
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) throws UsuarioInvalidoException {
+        if (nome == null || nome.isBlank()) {
+            throw new UsuarioInvalidoException("Nome do usuário não pode ser vazio.");
+        }
         this.nome = nome;
     }
 
@@ -32,31 +38,47 @@ public class usuario extends publicacoes implements Exibivel{
         return nivel;
     }
 
-    public void setNivel(String nivel) {
+    public void setNivel(String nivel) throws UsuarioInvalidoException {
+        if (nivel == null || nivel.isBlank()) {
+            throw new UsuarioInvalidoException("Nível do usuário não pode ser vazio.");
+        }
         this.nivel = nivel;
     }
-       
- // Sobrescrita: redefine o comportamento do método herdado para exibir dados do usuário       
-	@Override
-	 public void exibicaoUsuario (){
-            super.exibicaoPublicacoes(); //Exibe as informações comuns da publicação
-             System.out.println("Nome: " + nome);
-             System.out.println("Nivel: " + nivel);
-        }
 
- // Sobrecarga do método exibicaoUsuario: permite decidir se o nível do usuário será exibido ou não
-        public void exibicaoUsuario(boolean mostrarNivel) {
-            super.exibicaoPublicacoes(); // Exibe título, descrição e data do upload (Herdado da super)
+    // Método sobrescrito com tratamento de erro
+    @Override
+    public void exibicaoUsuario() {
+        try {
+            super.exibicaoPublicacoes();
+            System.out.println("Nome: " + nome);
+            System.out.println("Nivel: " + nivel);
+        } catch (Exception e) {
+            System.err.println("Erro ao exibir usuário: " + e.getMessage());
+        } finally {
+            System.out.println("Fim da exibição do usuário.\n");
+        }
+    }
+
+    // Sobrecarga do método exibicaoUsuario
+    public void exibicaoUsuario(boolean mostrarNivel) {
+        try {
+            super.exibicaoPublicacoes();
             System.out.println("Nome: " + nome);
             if (mostrarNivel) {
                 System.out.println("Nivel: " + nivel);
             } else {
                 System.out.println("Nivel: [oculto]");
             }
+        } catch (Exception e) {
+            System.err.println("Erro ao exibir usuário: " + e.getMessage());
+        } finally {
+            System.out.println("Fim da exibição do usuário.\n");
         }
-        
-        @Override
-        public void exibir() {
-            exibicaoAvaliacao();
-        }
+    }
+
+    @Override
+    public void exibir() {
+        exibicaoUsuario();
+    }
+
 }

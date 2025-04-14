@@ -3,26 +3,28 @@ package entites;
 // Classe base para todas as publicações (como avaliações, mídias, usuários, etc.)
 public class publicacoes {
 
-// Atributos protegidos (acessíveis pelas subclasses)
-        protected int id;
-        protected String titulo;
-        protected String descricao;
-        protected String dataUpload;
+    protected int id;
+    protected String titulo;
+    protected String descricao;
+    protected String dataUpload;
 
-// Construtor padrão (sem parâmetros)
-    public publicacoes (){
-         // Nenhuma inicialização útil aqui
+    // Construtor padrão
+    public publicacoes() {
+        // Nada a fazer aqui
     }
 
-
-// Construtor com parâmetros para facilitar a criação de objetos
-    public publicacoes (String titulo, String descricao, String dataUpload){
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.dataUpload = dataUpload;
+    // Construtor com validações
+    public publicacoes(String titulo, String descricao, String dataUpload) {
+        try {
+            setTitulo(titulo);
+            setDescricao(descricao);
+            setDataUpload(dataUpload);
+        } catch (PublicacaoInvalidaException e) {
+            System.err.println("Erro na criação da publicação: " + e.getMessage());
+        }
     }
-        
-// Getters e setters: usados para acessar e modificar os atributos        
+
+    // Getters e setters com validação
     public int getId() {
         return id;
     }
@@ -35,7 +37,10 @@ public class publicacoes {
         return titulo;
     }
 
-    public void setTitulo(String titulo) {
+    public void setTitulo(String titulo) throws PublicacaoInvalidaException {
+        if (titulo == null || titulo.isBlank()) {
+            throw new PublicacaoInvalidaException("Título da publicação não pode ser nulo ou vazio.");
+        }
         this.titulo = titulo;
     }
 
@@ -43,7 +48,10 @@ public class publicacoes {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
+    public void setDescricao(String descricao) throws PublicacaoInvalidaException {
+        if (descricao == null || descricao.isBlank()) {
+            throw new PublicacaoInvalidaException("Descrição da publicação não pode ser nula ou vazia.");
+        }
         this.descricao = descricao;
     }
 
@@ -51,18 +59,29 @@ public class publicacoes {
         return dataUpload;
     }
 
-    public void setDataUpload(String dataUpload) {
+    public void setDataUpload(String dataUpload) throws PublicacaoInvalidaException {
+        if (dataUpload == null || dataUpload.isBlank()) {
+            throw new PublicacaoInvalidaException("Data de upload não pode ser nula ou vazia.");
+        }
         this.dataUpload = dataUpload;
     }
-//Método padrão: exibir os dados da publicação (pode ser usado por todas as subclasses)     
-        public void exibicaoPublicacoes (){
+
+    // Método padrão com tratamento
+    public void exibicaoPublicacoes() {
+        try {
             System.out.println("Titulo: " + titulo);
             System.out.println("Descrição: " + descricao);
             System.out.println("Data do Upload: " + dataUpload);
+        } catch (Exception e) {
+            System.err.println("Erro ao exibir publicação: " + e.getMessage());
+        } finally {
+            System.out.println("Fim da exibição da publicação.\n");
         }
+    }
 
- //Sobrecarga do método exibicaoPublicacoes: permite controlar se a descrição será exibida ou não
-        public void exibicaoPublicacoes(boolean mostrarDescricao) {
+    // Sobrecarga com opção de ocultar descrição
+    public void exibicaoPublicacoes(boolean mostrarDescricao) {
+        try {
             System.out.println("Titulo: " + titulo);
             if (mostrarDescricao) {
                 System.out.println("Descrição: " + descricao);
@@ -70,23 +89,23 @@ public class publicacoes {
                 System.out.println("Descrição: [oculta]");
             }
             System.out.println("Data do Upload: " + dataUpload);
+        } catch (Exception e) {
+            System.err.println("Erro ao exibir publicação: " + e.getMessage());
+        } finally {
+            System.out.println("Fim da exibição da publicação.\n");
         }
+    }
 
- // Métodos "ganchos" que serão sobrescritos nas subclasses, aqui estão vazios, mas em classes como midias, usuario, avaliacao eles são sobrescritos
-   
- 
- // Método a ser sobrescrito por midias
-        public void exibicaoMidias(){
-            
-        }
+    // Métodos sobrescritos nas subclasses
+    public void exibicaoMidias() {
+        // Implementação nas subclasses
+    }
 
- // Método a ser sobrescrito por avaliacao
-        public void exibicaoAvaliacao(){
-            
-        }
+    public void exibicaoAvaliacao() {
+        // Implementação nas subclasses
+    }
 
- // Método a ser sobrescrito por usuario
-	public void exibicaoUsuario(){
-            
-        }
+    public void exibicaoUsuario() {
+        // Implementação nas subclasses
+    }
 }
