@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>OpenCode - Início</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <img src="assets/img/logo.png" alt="Logo OpenCode">
+    <h1>OpenCode</h1>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="pages/publicar.html">Nova Publicação</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Carregando publicações...</h2>
+  </main>
+  <footer>
+    <p>&copy; 2025 OpenCode</p>
+  </footer>
+  <script>
+    fetch("http://localhost:8080/api/publicacoes")
+      .then(res => res.json())
+      .then(data => {
+        const main = document.querySelector("main");
+        main.innerHTML = '<h2>Últimas Publicações</h2>';
+        data.forEach(pub => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.innerHTML = `
+            <h3>${pub.titulo}</h3>
+            <p>${pub.descricao}</p>
+            <small>Autor: ${pub.autor?.nome || 'Desconhecido'}</small>
+          `;
+          main.appendChild(div);
+        });
+      });
+  </script>
+</body>
+</html>

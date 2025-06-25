@@ -1,0 +1,8 @@
+body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; color: #333; margin: 0; }
+header { background: #2b2d42; color: white; padding: 1rem 2rem; display: flex; align-items: center; }
+header img { height: 40px; margin-right: 1rem; }
+nav { margin-left: auto; }
+nav a { color: white; text-decoration: none; margin-left: 2rem; }
+main { padding: 2rem; }
+.card { background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+footer { background: #edf2f4; color: #555; text-align: center; padding: 1rem; margin-top: 2rem; }

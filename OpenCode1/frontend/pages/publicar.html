@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nova Publicação - OpenCode</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <img src="../assets/img/logo.png" alt="Logo OpenCode">
+    <h1>OpenCode</h1>
+    <nav>
+      <a href="../index.html">Início</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Criar Nova Publicação</h2>
+    <form id="formPublicar">
+      <label>Título</label>
+      <input type="text" id="titulo" required><br><br>
+      <label>Descrição</label>
+      <textarea id="descricao" rows="5" required></textarea><br><br>
+      <label>Tipo</label>
+      <select id="tipo">
+        <option>Texto</option>
+        <option>Mídia</option>
+      </select><br><br>
+      <button type="submit">Publicar</button>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; 2025 OpenCode</p>
+  </footer>
+  <script>
+    document.getElementById("formPublicar").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const titulo = document.getElementById("titulo").value;
+      const descricao = document.getElementById("descricao").value;
+      const tipo = document.getElementById("tipo").value;
+
+      fetch("http://localhost:8080/api/publicacoes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo, descricao, tipo,
+          autor: { id: 1 }
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("Publicação criada!");
+        window.location.href = "../index.html";
+      });
+    });
+  </script>
+</body>
+</html>
